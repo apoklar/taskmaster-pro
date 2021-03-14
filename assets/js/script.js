@@ -16,25 +16,7 @@ var createTask = function(taskText, taskDate, taskList) {
   taskLi.append(taskSpan, taskP);
 
   // check due date
-  var auditTask = function(taskEl) {
-    // get date from task element
-    var date = $(taskEl).find("span").text().trim();
-  
-    // convert to moment object at 5:00pm
-    var time = moment(date, "L").set("hour", 17);
-  
-    // remove any old classes from element
-    $(taskEl).removeClass("list-group-item-warning list-group-item-danger");
-  
-    // apply new class if task is near/over due date
-    if (moment().isAfter(time)) {
-      $(taskEl).addClass("list-group-item-danger");
-    }
-
-    else if (Math.abs(moment().diff(time, "days")) <= 2) {
-      $(taskEl).addClass("list-group-item-warning");
-    } 
-  };
+  auditTask(taskLi);
 
   // append to ul list on the page
   $("#list-" + taskList).append(taskLi);
@@ -175,11 +157,11 @@ $(".list-group").on("click", "span", function() {
   $(this).replaceWith(dateInput);
 
  // enable jquery ui datepicker
-dateInput.datepicker({
-  minDate: 1,
-  onClose: function() {
+  dateInput.datepicker({
+    minDate: 1,
+    onClose: function() {
     // when calendar is closed, force a "change" event on the `dateInput`
-    $(this).trigger("change");
+      $(this).trigger("change");
   }
 });
 
@@ -271,8 +253,23 @@ $(".list-group").on("change", "input[type='text']", function() {
 });
 
 var auditTask = function(taskEl) {
-  // to ensure element is getting to the function
-  console.log(taskEl);
+  // get date from task element
+  var date = $(taskEl).find("span").text().trim();
+
+  // convert to moment object at 5:00pm
+  var time = moment(date, "L").set("hour", 17);
+
+  // remove any old classes from element
+  $(taskEl).removeClass("list-group-item-warning list-group-item-danger");
+
+  // apply new class if task is near/over due date
+  if (moment().isAfter(time)) {
+    $(taskEl).addClass("list-group-item-danger");
+  }
+
+  else if (Math.abs(moment().diff(time, "days")) <= 2) {
+    $(taskEl).addClass("list-group-item-warning");
+  } 
 };
 
 // remove all tasks
